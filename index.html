@@ -1,114 +1,1637 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Life OS</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧊</text></svg>" />
-<link rel="stylesheet" href="styles.css?v=9" />
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script type="module" src="app.js?v=9"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo Cáo Tâm Lý Học - Nhóm 7 - ĐH Cần Thơ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --parchment: #f6efe2;
+            --ink-brown: #3e2723;
+            --stamp-red: #7a1f18;
+            --ctu-blue: #005baa;
+            --ctu-cyan: #00a0e9;
+            --ctu-gold: #c59b27;
+            --border-vintage: #c7b299;
+            --correct-green: #2e7d32;
+            --wrong-red: #c62828;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background: #e8dec8 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' result='noise'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0.94 0 1 0 0 0.89 0 0 1 0 0.80 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='80' height='80' filter='url(%23paper)' opacity='0.6'/%3E%3C/svg%3E");
+            color: var(--ink-brown);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        #presentation-viewport {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 72px;
+        }
+
+        .slide-stage {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 16px 36px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.98);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide-stage.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+
+        /* ================= 1. SLIDE BÌA ================= */
+        .cover-container {
+            width: 100%;
+            max-width: 1050px;
+            height: 90%;
+            background: #fbf7ee;
+            border: 2px solid var(--border-vintage);
+            box-shadow: 0 15px 40px rgba(62, 39, 35, 0.15), inset 0 0 60px rgba(199, 178, 153, 0.3);
+            border-radius: 12px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .stamp-banner {
+            background: var(--stamp-red);
+            color: #ffffff;
+            padding: 24px 64px;
+            font-family: 'Cinzel', serif;
+            font-size: 3.8rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            position: relative;
+            box-shadow: 0 12px 30px rgba(122, 31, 24, 0.35);
+            border-radius: 6px;
+            border: 3px dashed rgba(255, 255, 255, 0.4);
+            text-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+
+        .wax-seal {
+            position: absolute;
+            right: 64px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 110px;
+            height: 110px;
+            background: radial-gradient(circle at 35% 35%, #b71c1c, #6b1410);
+            border-radius: 50%;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.35), inset 0 2px 6px rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px dashed rgba(255,255,255,0.25);
+        }
+
+        .wax-seal::after {
+            content: "CTU";
+            color: rgba(255, 235, 238, 0.9);
+            font-family: 'Cinzel', serif;
+            font-weight: 900;
+            font-size: 1.6rem;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .antique-books {
+            position: absolute;
+            left: 50px;
+            bottom: 30px;
+            width: 170px;
+        }
+
+        /* ================= 2. SLIDE NHÓM 7 ================= */
+        .roster-card {
+            width: 100%;
+            max-width: 900px;
+            background: #fbf7ee;
+            border: 2px solid var(--border-vintage);
+            box-shadow: 0 12px 35px rgba(62, 39, 35, 0.12);
+            border-radius: 12px;
+            padding: 40px 60px;
+            text-align: center;
+        }
+
+        .roster-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.6rem;
+            color: var(--stamp-red);
+            margin-bottom: 32px;
+            font-weight: 800;
+            border-bottom: 2px solid var(--border-vintage);
+            padding-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .roster-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px 48px;
+            text-align: left;
+        }
+
+        .roster-item {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2b1810;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .roster-item::before {
+            content: "✦";
+            color: var(--stamp-red);
+            font-size: 0.9rem;
+        }
+
+        /* ================= 3. TRÒ CHƠI Ô CHỮ ================= */
+        .cw-board-wrap {
+            background: #fbf7ee;
+            border: 2px solid var(--border-vintage);
+            border-radius: 12px;
+            padding: 20px 32px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 1050px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .cw-clue-top-bar {
+            width: 100%;
+            background: #f3ece0;
+            border: 2px solid var(--border-vintage);
+            border-left: 8px solid var(--stamp-red);
+            padding: 16px 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .cw-question-prominent {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--ink-brown);
+            line-height: 1.45;
+        }
+
+        .cw-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-top: 6px;
+        }
+
+        .cw-row {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .cw-row:hover { background: rgba(0, 91, 170, 0.08); }
+        .cw-row.active-row { background: rgba(0, 91, 170, 0.15); }
+
+        .cw-row-label {
+            width: 28px;
+            font-weight: 800;
+            color: var(--stamp-red);
+            text-align: right;
+            margin-right: 8px;
+            font-size: 0.95rem;
+        }
+
+        .cw-box {
+            width: 36px;
+            height: 36px;
+            background: #fff;
+            border: 1.5px solid #a89f91;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--ink-brown);
+            text-transform: uppercase;
+            transition: all 0.25s;
+        }
+
+        .cw-box.key-cell {
+            background: #fef08a;
+            border-color: #ca8a04;
+        }
+
+        .cw-box.revealed {
+            background: #e0f2fe;
+            border-color: var(--ctu-blue);
+            transform: scale(1.05);
+        }
+
+        .cw-box.revealed.key-cell {
+            background: #fde047;
+            border-color: #b45309;
+            color: #78350f;
+            box-shadow: 0 0 10px rgba(202, 138, 4, 0.5);
+        }
+
+        .btn-vintage {
+            background: var(--stamp-red);
+            color: #fff;
+            border: none;
+            padding: 9px 20px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(122, 31, 24, 0.25);
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-vintage:hover { opacity: 0.92; transform: translateY(-1px); }
+
+        /* ================= 4. SLIDE GOOGLE SLIDES ================= */
+        .slide-frame-container {
+            width: 100%;
+            max-width: 1100px;
+            height: 94%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            position: relative;
+        }
+
+        .slide-action-bar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        /* Nút toàn màn hình CHỈ CÓ ICON */
+        .btn-fullscreen-icon {
+            background: var(--ctu-blue);
+            color: #fff;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 91, 170, 0.25);
+            transition: all 0.2s;
+        }
+
+        .btn-fullscreen-icon:hover { background: #004582; transform: scale(1.05); }
+
+        .slide-viewport-box {
+            flex: 1;
+            background: #000;
+            border-radius: 12px;
+            border: 3px solid var(--border-vintage);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slide-viewport-box iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* ================= 5. TRÒ CHƠI QUIZ CÂY TÁO ================= */
+        .quiz-woodcut-layout {
+            width: 100%;
+            max-width: 1100px;
+            height: 540px;
+            background: #fbf7ee;
+            border: 2px solid var(--border-vintage);
+            border-radius: 12px;
+            box-shadow: 0 12px 35px rgba(62, 39, 35, 0.12);
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 24px;
+            padding: 20px 24px;
+        }
+
+        .tree-scene-container {
+            background: #eaf2f8;
+            border: 1.5px solid var(--border-vintage);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* HOẠT ẢNH QUẢ RƠI & NEWTON GỤC NGÃ TRONG SVG */
+        #svg-apple {
+            opacity: 0;
+            transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.15s;
+        }
+        #svg-apple.drop {
+            opacity: 1;
+            transform: translateY(185px);
+        }
+
+        #svg-durian {
+            opacity: 0;
+            transition: transform 0.6s cubic-bezier(0.5, 0, 0.75, 0), opacity 0.15s;
+        }
+        #svg-durian.drop {
+            opacity: 1;
+            transform: translateY(155px);
+        }
+
+        /* Trạng thái Newton bị gục ngã (Die/KO) */
+        #newton-figure {
+            transform-origin: 170px 320px;
+            transition: transform 0.4s ease-in;
+        }
+        #newton-figure.knocked-out {
+            transform: rotate(45deg);
+        }
+
+        .dizzy-indicator {
+            display: none;
+            font-size: 1.6rem;
+        }
+        #newton-figure.knocked-out .dizzy-indicator {
+            display: block;
+        }
+
+        .eye-normal { display: block; }
+        .eye-dead { display: none; }
+        #newton-figure.knocked-out .eye-normal { display: none; }
+        #newton-figure.knocked-out .eye-dead { display: block; }
+
+        .quiz-status-pill {
+            position: absolute;
+            top: 14px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            display: none;
+            z-index: 30;
+        }
+
+        .quiz-status-pill.pass {
+            display: block;
+            background: #dcfce7;
+            color: var(--correct-green);
+            border: 1.5px solid #86efac;
+        }
+
+        .quiz-status-pill.fail {
+            display: block;
+            background: #fee2e2;
+            color: var(--wrong-red);
+            border: 1.5px solid #fca5a5;
+        }
+
+        .formula-float {
+            position: absolute;
+            top: 85px;
+            right: 15px;
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--stamp-red);
+            opacity: 0;
+            transition: opacity 0.4s;
+            background: rgba(255,255,255,0.92);
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-vintage);
+            z-index: 20;
+        }
+
+        .formula-float.show { opacity: 1; }
+
+        .quiz-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .q-number-chips {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .chip-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid var(--border-vintage);
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chip-btn.active {
+            background: var(--stamp-red);
+            color: #fff;
+            border-color: var(--stamp-red);
+        }
+
+        .chip-btn.pass {
+            background: #dcfce7;
+            border-color: var(--correct-green);
+            color: var(--correct-green);
+        }
+
+        .chip-btn.fail {
+            background: #fee2e2;
+            border-color: var(--wrong-red);
+            color: var(--wrong-red);
+        }
+
+        .q-title {
+            font-size: 1.12rem;
+            font-weight: 700;
+            line-height: 1.5;
+            color: var(--ink-brown);
+            min-height: 52px;
+        }
+
+        .q-answers {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .answer-choice {
+            background: #ffffff;
+            border: 1.5px solid var(--border-vintage);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: #2b1810;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .answer-choice:hover:not(:disabled) {
+            background: #fdfaf3;
+            border-color: var(--ctu-blue);
+            transform: translateX(4px);
+        }
+
+        .answer-choice.correct {
+            background: #dcfce7 !important;
+            border-color: var(--correct-green) !important;
+            color: var(--correct-green) !important;
+        }
+
+        .answer-choice.wrong {
+            background: #fee2e2 !important;
+            border-color: var(--wrong-red) !important;
+            color: var(--wrong-red) !important;
+        }
+
+        .quiz-footer-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* ================= 6. MINIGAME KÉO THẢ NHÂN CÁCH ================= */
+        .matching-board-v2 {
+            width: 100%;
+            max-width: 1050px;
+            height: 530px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .drop-targets-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .genius-dropzone {
+            background: #fbf7ee;
+            border: 2px dashed #0284c7;
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+            gap: 6px;
+            transition: all 0.2s;
+            box-shadow: inset 0 0 15px rgba(2, 132, 199, 0.05);
+        }
+
+        .genius-dropzone.hawking-target {
+            border-color: #8b261e;
+            box-shadow: inset 0 0 15px rgba(139, 38, 30, 0.05);
+        }
+
+        .genius-dropzone.drag-over {
+            background: #f0f9ff;
+            transform: scale(1.01);
+        }
+
+        .portrait-frame {
+            width: 82px;
+            height: 94px;
+            border: 2px solid var(--border-vintage);
+            border-radius: 6px;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dropzone-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--ink-brown);
+            margin: 4px 0 6px;
+        }
+
+        .card-dock {
+            background: #fbf7ee;
+            border: 2px dashed var(--border-vintage);
+            border-radius: 12px;
+            padding: 12px 16px;
+            min-height: 120px;
+            max-height: 130px;
+            overflow-x: auto;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .draggable-slip {
+            background: #ffffff;
+            border: 1.5px solid var(--border-vintage);
+            border-radius: 8px;
+            padding: 9px 15px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--ink-brown);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.06);
+            cursor: grab;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .draggable-slip:active { cursor: grabbing; opacity: 0.6; }
+
+        .draggable-slip.matched {
+            cursor: default;
+            background: #dcfce7;
+            border-color: #86efac;
+            color: var(--correct-green);
+            box-shadow: none;
+            width: 95%;
+            text-align: center;
+            white-space: normal;
+        }
+
+        /* ================= 7. SLIDE KẾT THÚC ================= */
+        .end-card {
+            background: #fbf7ee;
+            border: 2px solid var(--border-vintage);
+            border-radius: 12px;
+            padding: 50px 70px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(62, 39, 35, 0.12);
+        }
+
+        .end-card h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: var(--stamp-red);
+            margin-bottom: 20px;
+        }
+
+        /* ================= THANH ĐIỀU HƯỚNG ĐH CẦN THƠ (ĐÁY TRANG) ================= */
+        #ctu-bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 72px;
+            background: #ffffff;
+            border-top: 2px solid var(--ctu-blue);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.06);
+            z-index: 1000;
+        }
+
+        .ctu-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ctu-logo-svg {
+            width: 44px;
+            height: 44px;
+            flex-shrink: 0;
+        }
+
+        .ctu-titles {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ctu-main-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--ctu-blue);
+        }
+
+        .ctu-slogan {
+            font-size: 0.75rem;
+            color: var(--ctu-cyan);
+            font-weight: 600;
+        }
+
+        .floating-pill {
+            display: flex;
+            align-items: center;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            border-radius: 999px;
+            padding: 5px 12px;
+            gap: 8px;
+            position: absolute;
+            left: 50%;
+            top: -24px;
+            transform: translateX(-50%);
+        }
+
+        .pill-btn {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #334155;
+            transition: all 0.2s;
+        }
+
+        .pill-btn:hover {
+            background: var(--ctu-blue);
+            color: #fff;
+            border-color: var(--ctu-blue);
+        }
+
+        .pill-divider {
+            width: 1px;
+            height: 20px;
+            background: #cbd5e1;
+        }
+
+        .progress-rail {
+            position: absolute;
+            bottom: 34px;
+            left: 280px;
+            right: 220px;
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--ctu-cyan);
+            width: 0%;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .diamond-marker {
+            position: absolute;
+            right: -7px;
+            top: -5px;
+            width: 14px;
+            height: 14px;
+            background: var(--ctu-blue);
+            transform: rotate(45deg);
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .ctu-web {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--ctu-blue);
+            text-decoration: none;
+        }
+
+        #confetti-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+    </style>
 </head>
 <body>
-<div x-data="lifeOS" x-cloak style="display:flex; width:100vw; height:100vh;">
 
-  <!-- MACOS CONTROLS -->
-  <div class="mac-controls">
-    <div class="mac-dot close" title="Đóng"></div>
-    <div class="mac-dot min" @click="sidebarOpen = !sidebarOpen" title="Thu nhỏ"></div>
-    <div class="mac-dot max" @click="view='settings'" title="Cài đặt"></div>
-  </div>
+    <canvas id="confetti-canvas"></canvas>
 
-  <!-- DYNAMIC ISLAND -->
-  <template x-if="$store.db.settings.glass.dynamicIsland">
-    <div class="dynamic-island" :class="{expanded: diExpanded}" @click="diExpanded = !diExpanded">
-      <div x-show="!diExpanded" class="di-compact">
-        <span class="di-dot"></span><span x-text="diCompactText()"></span>
-      </div>
-      <div x-show="diExpanded" class="di-expanded">
-        <div class="di-line">🗓 <span x-text="diGreeting()"></span></div>
-        <div class="di-line">⏱ <span x-text="diNextTask()"></span></div>
-        <div class="di-line">🔁 <span x-text="diHabitsLine()"></span></div>
-      </div>
-    </div>
-  </template>
-  
-  <button class="sidebar-toggle glass" @click="toggleSidebar()"><span x-text="sidebarOpen ? '◀' : '☰'"></span></button>
-  <div class="backdrop" x-show="sidebarOpen" @click="sidebarOpen=false" x-cloak></div>
+    <main id="presentation-viewport">
 
-  <aside class="sidebar glass" :class="{closed: !sidebarOpen}">
-    <div class="brand"><span class="brand-dot"></span> Life OS</div>
-    <div class="nav-scroll">
-      <template x-for="grp in nav" :key="grp.group">
-        <div class="nav-group">
-          <div class="nav-group-label" x-text="grp.group"></div>
-          <template x-for="item in grp.items" :key="item.id">
-            <button class="nav-btn" :class="{active: view===item.id}" @click="view=item.id">
-              <span class="nav-icon" x-text="item.icon"></span>
-              <span class="nav-label" x-text="item.label"></span>
-            </button>
-          </template>
+        <!-- ================= SLIDE 1: BÌA TÂM LÍ HỌC ================= -->
+        <section id="slide-1" class="slide-stage active">
+            <div class="cover-container">
+                <div class="stamp-banner">TÂM LÍ HỌC</div>
+                <div class="wax-seal"></div>
+                <svg class="antique-books" viewBox="0 0 160 110">
+                    <rect x="10" y="80" width="140" height="22" rx="2" fill="#3e2723" stroke="#271202" stroke-width="2"/>
+                    <rect x="25" y="85" width="20" height="12" fill="#c59b27"/>
+                    <rect x="15" y="55" width="130" height="23" rx="2" fill="#6d1b15" stroke="#3d0a06" stroke-width="2"/>
+                    <line x1="20" y1="66" x2="140" y2="66" stroke="#c59b27" stroke-dasharray="4,4"/>
+                    <rect x="20" y="32" width="120" height="21" rx="2" fill="#2d3748" stroke="#1a202c" stroke-width="2"/>
+                    <rect x="18" y="10" width="115" height="20" rx="2" fill="#1b4332" stroke="#081c15" stroke-width="2"/>
+                </svg>
+            </div>
+        </section>
+
+        <!-- ================= SLIDE 2: THÀNH VIÊN NHÓM 7 ================= -->
+        <section id="slide-2" class="slide-stage">
+            <div class="roster-card">
+                <h2 class="roster-title">NHÓM 7</h2>
+                <div class="roster-grid">
+                    <div>
+                        <div class="roster-item" style="margin-bottom: 16px;">Trần Thiên Phát Đạt</div>
+                        <div class="roster-item" style="margin-bottom: 16px;">Vũ Nguyễn Minh Hoàng</div>
+                        <div class="roster-item" style="margin-bottom: 16px;">Cao Thiện Nhân</div>
+                        <div class="roster-item" style="margin-bottom: 16px;">Trần Minh Quý</div>
+                        <div class="roster-item">Nguyễn Trần Việt Sữ</div>
+                    </div>
+                    <div>
+                        <div class="roster-item" style="margin-bottom: 16px;">Lê Đức Tài</div>
+                        <div class="roster-item" style="margin-bottom: 16px;">Trương Minh Triết</div>
+                        <div class="roster-item" style="margin-bottom: 16px;">Phạm Tuấn Tú</div>
+                        <div class="roster-item" style="margin-bottom: 16px;">Nguyễn Văn Tân</div>
+                        <div class="roster-item">Nguyễn Phong Nhã</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SLIDE 3: TRÒ CHƠI Ô CHỮ CÓ DẤU ================= -->
+        <section id="slide-3" class="slide-stage">
+            <h2 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--ink-brown); margin-bottom: 12px;">
+                TRÒ CHƠI: Ô CHỮ BÍ MẬT
+            </h2>
+
+            <div class="cw-board-wrap">
+                <div class="cw-clue-top-bar">
+                    <div id="cw-clue-text" class="cw-question-prominent">
+                        👉 Bấm nút &gt; trên thanh điều khiển để mở hàng đầu tiên.
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn-vintage" onclick="revealCurrentRow()">Mở Hàng Này</button>
+                        <button class="btn-vintage" style="background: var(--ctu-gold);" onclick="revealAllRows()">Mở Tất Cả</button>
+                    </div>
+                </div>
+
+                <div class="cw-grid" id="cw-grid-body"></div>
+            </div>
+        </section>
+
+        <!-- ================= SLIDE 4: TRÌNH CHIẾU GOOGLE SLIDES TRỰC TIẾP ================= -->
+        <section id="slide-4" class="slide-stage">
+            <div class="slide-frame-container" id="slide-fullscreen-target">
+                <div class="slide-action-bar">
+                    <button class="btn-fullscreen-icon" id="btn-fs-toggle" onclick="toggleSlideFullscreen()" title="Toàn màn hình">
+                        ⛶
+                    </button>
+                </div>
+                <div class="slide-viewport-box">
+                    <iframe id="main-google-slide-frame" allowfullscreen="true"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SLIDE 5: QUIZ CÂY TÁO NEWTON ================= -->
+        <section id="slide-5" class="slide-stage">
+            <h2 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--ink-brown); margin-bottom: 12px;">
+                QUIZ TÂM LÝ: CÂY TÁO TƯ DUY
+            </h2>
+
+            <div class="quiz-woodcut-layout">
+                <div class="tree-scene-container" id="tree-scene-box">
+                    <div class="quiz-status-pill" id="quiz-status-pill">PASS [✓]</div>
+                    <div class="formula-float" id="formula-text">F = G (m₁m₂ / r²)</div>
+
+                    <!-- TRANH MINH HỌA TÍCH HỢP QUẢ RƠI & NEWTON GỤC NGÃ -->
+                    <svg viewBox="0 0 320 380" style="width: 100%; height: 100%;">
+                        <rect x="0" y="0" width="320" height="380" fill="#eaf2f8"/>
+                        <path d="M-20,380 Q100,280 340,320 L340,380 Z" fill="#7cb342"/>
+                        <path d="M-20,380 Q160,260 340,380 Z" fill="#558b2f"/>
+                        
+                        <!-- Cây táo -->
+                        <path d="M70,380 Q95,200 80,120 Q120,140 140,380 Z" fill="#5d4037"/>
+                        <path d="M80,160 Q30,120 10,130 Q30,110 75,140 Z" fill="#4e342e"/>
+                        <path d="M90,140 Q150,90 200,110 Q140,110 85,135 Z" fill="#4e342e"/>
+                        
+                        <circle cx="60" cy="90" r="65" fill="#2e7d32"/>
+                        <circle cx="150" cy="70" r="75" fill="#388e3c"/>
+                        <circle cx="230" cy="95" r="60" fill="#2e7d32"/>
+                        <circle cx="140" cy="115" r="60" fill="#1b5e20"/>
+                        
+                        <circle cx="50" cy="85" r="7" fill="#d32f2f"/>
+                        <circle cx="110" cy="55" r="7" fill="#d32f2f"/>
+                        <circle cx="210" cy="90" r="7" fill="#d32f2f"/>
+                        <circle cx="145" cy="105" r="7" fill="#d32f2f"/>
+
+                        <!-- QUẢ TÁO ĐỎ RƠI TRONG HỆ TỌA ĐỘ CHUẨN -->
+                        <g id="svg-apple">
+                            <circle cx="170" cy="55" r="14" fill="#d32f2f"/>
+                            <path d="M170,41 Q175,32 180,35" stroke="#5d4037" stroke-width="2.5" fill="none"/>
+                            <path d="M172,37 Q185,32 182,42 Z" fill="#4caf50"/>
+                        </g>
+
+                        <!-- QUẢ SẦU RIÊNG GAI RƠI TRONG HỆ TỌA ĐỘ CHUẨN -->
+                        <g id="svg-durian">
+                            <!-- Gai sầu riêng -->
+                            <polygon points="145,30 152,45 138,45" fill="#7cb342"/>
+                            <polygon points="130,45 145,55 130,65" fill="#689f38"/>
+                            <polygon points="160,45 145,55 160,65" fill="#689f38"/>
+                            <polygon points="145,80 138,65 152,65" fill="#7cb342"/>
+                            <!-- Thân quả sầu riêng -->
+                            <ellipse cx="145" cy="55" rx="16" ry="19" fill="#8bc34a" stroke="#558b2f" stroke-width="2"/>
+                            <!-- Cuống quả -->
+                            <path d="M145,36 L145,26" stroke="#4e342e" stroke-width="3.5"/>
+                        </g>
+
+                        <!-- NHÂN VẬT NEWTON (CÓ KHẢ NĂNG GỤC NGÃ KHI SAI) -->
+                        <g id="newton-figure" transform="translate(110, 180)">
+                            <!-- Sao choáng váng khi bị đập trúng -->
+                            <text x="30" y="8" class="dizzy-indicator">💫 💫</text>
+
+                            <path d="M20,120 L80,135 L95,120 L60,105 L20,110 Z" fill="#263238"/>
+                            <path d="M25,125 L75,145 L85,155 L15,145 Z" fill="#37474f"/>
+                            <rect x="85" y="145" width="22" height="12" rx="4" fill="#212121"/>
+                            <rect x="90" y="147" width="8" height="8" fill="#ffb300"/>
+                            
+                            <path d="M15,50 Q45,45 65,65 L55,120 L5,115 Z" fill="#1565c0"/>
+                            <path d="M30,50 L45,75 L35,80 L25,55 Z" fill="#ffffff"/>
+                            <path d="M20,65 Q45,85 60,80 L55,100 Q35,95 15,85 Z" fill="#0d47a1"/>
+                            <polygon points="50,75 75,65 90,85 65,95" fill="#f5f5f5" stroke="#8d6e63" stroke-width="2"/>
+                            
+                            <!-- Đầu và biểu cảm -->
+                            <circle cx="35" cy="38" r="14" fill="#ffcc80"/>
+                            
+                            <!-- Mắt bình thường (Khi sống) -->
+                            <g class="eye-normal">
+                                <circle cx="42" cy="36" r="2" fill="#3e2723"/>
+                                <path d="M40,43 Q44,46 40,48" stroke="#d7ccc8" fill="none" stroke-width="1.5"/>
+                            </g>
+
+                            <!-- Mắt X_X (Khi bị sầu riêng đập trúng) -->
+                            <g class="eye-dead">
+                                <line x1="39" y1="33" x2="45" y2="39" stroke="#b71c1c" stroke-width="2"/>
+                                <line x1="45" y1="33" x2="39" y2="39" stroke="#b71c1c" stroke-width="2"/>
+                                <path d="M37,46 Q42,42 47,46" stroke="#b71c1c" fill="none" stroke-width="2"/>
+                            </g>
+
+                            <!-- Mái tóc giả thời Phục hưng -->
+                            <path d="M22,25 Q35,15 50,25 Q55,40 50,55 Q40,60 30,58 Q18,50 22,25 Z" fill="#cfd8dc"/>
+                            <circle cx="22" cy="40" r="6" fill="#b0bec5"/>
+                            <circle cx="24" cy="50" r="6" fill="#b0bec5"/>
+                            <circle cx="28" cy="56" r="5" fill="#90a4ae"/>
+                        </g>
+                    </svg>
+                </div>
+
+                <div class="quiz-panel">
+                    <div>
+                        <div class="q-number-chips" id="q-chips-container"></div>
+                        <div class="q-title" id="quiz-question-title">Đang tải câu hỏi...</div>
+                        <div class="q-answers" id="quiz-choices-container"></div>
+                    </div>
+
+                    <div class="quiz-footer-nav">
+                        <button class="btn-vintage" style="background: #64748b;" onclick="prevQuizQ()">‹ Câu Trước</button>
+                        <span id="quiz-score-indicator" style="font-weight: 700; color: var(--ctu-blue);">Điểm: 0 / 100</span>
+                        <button class="btn-vintage" onclick="nextQuizQ()">Câu Kế Tiếp ›</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SLIDE 6: KÉO THẢ NHÂN CÁCH ================= -->
+        <section id="slide-6" class="slide-stage">
+            <h2 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--ink-brown); margin-bottom: 12px;">
+                TRÒ CHƠI: GHÉP NỐI NHÂN CÁCH
+            </h2>
+
+            <div class="matching-board-v2">
+                <div class="drop-targets-row">
+                    <!-- Ô NEWTON -->
+                    <div class="genius-dropzone" id="zone-newton" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'newton')">
+                        <div class="portrait-frame">
+                            <svg viewBox="0 0 100 110" style="width: 100%; height: 100%;">
+                                <rect width="100" height="110" fill="#f0f7ff"/>
+                                <path d="M20,35 Q15,65 25,85 Q35,50 45,35 Q55,20 70,25 Q85,45 80,85 Q90,65 85,35 Q75,10 50,12 Q25,12 20,35 Z" fill="#cfd8dc"/>
+                                <circle cx="50" cy="50" r="22" fill="#ffd1a4"/>
+                                <path d="M44,48 Q50,52 56,48" stroke="#5d4037" fill="none" stroke-width="2"/>
+                                <circle cx="43" cy="45" r="2" fill="#3e2723"/>
+                                <circle cx="57" cy="45" r="2" fill="#3e2723"/>
+                                <path d="M22,110 L28,78 L45,84 L55,84 L72,78 L78,110 Z" fill="#1565c0"/>
+                                <polygon points="45,84 55,84 52,102 48,102" fill="#ffffff"/>
+                            </svg>
+                        </div>
+                        <div class="dropzone-title">Isaac Newton</div>
+                    </div>
+
+                    <!-- Ô HAWKING -->
+                    <div class="genius-dropzone hawking-target" id="zone-hawking" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'hawking')">
+                        <div class="portrait-frame">
+                            <svg viewBox="0 0 100 110" style="width: 100%; height: 100%;">
+                                <rect width="100" height="110" fill="#fdf4f4"/>
+                                <rect x="18" y="22" width="64" height="65" rx="8" fill="#37474f"/>
+                                <rect x="25" y="28" width="50" height="52" rx="4" fill="#263238"/>
+                                <circle cx="50" cy="52" r="20" fill="#ffe0b2"/>
+                                <path d="M35,42 Q50,30 65,38 Q65,48 50,42 Z" fill="#8d6e63"/>
+                                <rect x="40" y="46" width="9" height="7" rx="1" fill="none" stroke="#212121" stroke-width="1.8"/>
+                                <rect x="52" y="46" width="9" height="7" rx="1" fill="none" stroke="#212121" stroke-width="1.8"/>
+                                <line x1="49" y1="49" x2="52" y2="49" stroke="#212121" stroke-width="1.5"/>
+                                <path d="M46,62 Q50,66 56,62" stroke="#b71c1c" fill="none" stroke-width="2"/>
+                                <path d="M28,110 L34,80 L66,80 L72,110 Z" fill="#455a64"/>
+                                <polygon points="47,80 53,80 51,98 49,98" fill="#0284c7"/>
+                            </svg>
+                        </div>
+                        <div class="dropzone-title">Stephen Hawking</div>
+                    </div>
+                </div>
+
+                <div class="card-dock" id="card-dock"></div>
+            </div>
+        </section>
+
+        <!-- ================= SLIDE 7: KẾT THÚC ================= -->
+        <section id="slide-7" class="slide-stage">
+            <div class="end-card">
+                <h1>XIN CHÂN THÀNH CẢM ƠN CÔ VÀ CÁC BẠN!</h1>
+                <div style="display: flex; justify-content: center; gap: 12px; margin-top: 24px;">
+                    <button class="btn-vintage" onclick="jumpToSlide(1)">🔄 Quay Lại Bìa</button>
+                    <button class="btn-vintage" style="background: var(--ctu-gold);" onclick="triggerConfetti()">🎉 Bắn Pháo Hoa</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================= THANH ĐIỀU HƯỚNG ĐH CẦN THƠ (ĐÁY TRANG) ================= -->
+    <footer id="ctu-bottom-bar">
+        <div class="ctu-brand">
+            <svg class="ctu-logo-svg" viewBox="0 0 100 100">
+                <polygon points="50,2 98,50 50,98 2,50" fill="#005baa" stroke="#00a0e9" stroke-width="3"/>
+                <polygon points="50,8 92,50 50,92 8,50" fill="none" stroke="#ffffff" stroke-width="2"/>
+                <circle cx="50" cy="50" r="24" fill="none" stroke="#facc15" stroke-dasharray="6,3" stroke-width="5"/>
+                <path d="M48,34 L52,34 L54,58 L46,58 Z" fill="#ffffff"/>
+                <path d="M44,32 Q50,18 56,32 Q50,24 44,32 Z" fill="#ef4444"/>
+                <text x="50" y="85" text-anchor="middle" fill="#ffffff" font-size="8" font-weight="900" font-family="'Be Vietnam Pro', sans-serif">ĐẠI HỌC CẦN THƠ</text>
+            </svg>
+            <div class="ctu-titles">
+                <span class="ctu-main-title">ĐẠI HỌC CẦN THƠ</span>
+                <span class="ctu-slogan">Cộng đồng - Toàn diện - Ưu việt</span>
+            </div>
         </div>
-      </template>
-    </div>
-    <div class="sidebar-foot">
-      <button class="nav-btn" @click="showAuth = true">
-        <span class="nav-icon">☁️</span><span class="nav-label">Đồng bộ (Auth)</span>
-      </button>
-    </div>
-  </aside>
 
-  <main class="main" :class="{expanded: !sidebarOpen}">
-    <section class="content">
-      <template x-if="view==='dashboard'"><div x-data="m_dashboard" x-html="tpl" x-init="$nextTick(()=>Alpine.initTree($el))"></div></template>
-      <template x-if="view==='timeline'"><div x-data="m_timeline" x-html="tpl" x-init="$nextTick(()=>Alpine.initTree($el))"></div></template>
-      <template x-if="view==='tasks'"><div x-data="m_tasks" x-html="tpl" x-init="$nextTick(()=>Alpine.initTree($el))"></div></template>
-      <template x-if="view==='habits'"><div x-data="m_habits" x-html="tpl" x-init="$nextTick(()=>Alpine.initTree($el))"></div></template>
-      <template x-if="view==='journal'"><div x-data="m_journal" x-html="tpl" x-init="$nextTick(()=>Alpine.initTree($el))"></div></template>
-      <template x-if="view==='settings'"><div x-data="m_settings" x-html="tpl" x-init="$nextTick(()=>Alpine.initTree($el))"></div></template>
-      <!-- Các module khác tự load nếu bạn đã tạo -->
-    </section>
-  </main>
-
-  <!-- AUTH MODAL -->
-  <div class="modal-backdrop" x-show="showAuth" x-cloak @click.self="showAuth=false">
-    <div class="modal glass" @click.stop>
-      <h2 style="margin-top:0">☁️ Đồng bộ Đám mây</h2>
-      <template x-if="!user">
-        <div>
-          <p style="font-size:13px;opacity:0.8;margin-bottom:16px">Đăng nhập để đồng bộ dữ liệu trên nhiều thiết bị.</p>
-          <input class="input" x-model="authEmail" placeholder="Email" style="margin-bottom:10px" />
-          <input class="input" type="password" x-model="authPass" placeholder="Mật khẩu" style="margin-bottom:16px" />
-          <div class="row">
-            <button class="btn primary" @click="doLogin()">Đăng nhập</button>
-            <button class="btn" @click="doSignup()">Đăng ký</button>
-          </div>
+        <div class="progress-rail">
+            <div class="progress-fill" id="ctu-progress-rail-fill">
+                <div class="diamond-marker"></div>
+            </div>
         </div>
-      </template>
-      <template x-if="user">
-        <div>
-          <p>Đã đăng nhập: <b x-text="user.email"></b></p>
-          <div class="row">
-            <button class="btn primary" @click="forceSync()">🔄 Sync ngay</button>
-            <button class="btn" style="color:#ff3b30" @click="doLogout()">Đăng xuất</button>
-          </div>
+
+        <div class="floating-pill">
+            <button class="pill-btn" onclick="handleSmartPrev()" title="Lùi lại">‹</button>
+            <button class="pill-btn" onclick="handleSmartNext()" title="Tiến tới">›</button>
+            <div class="pill-divider"></div>
+            <button class="pill-btn" onclick="toggleFullScreen()" title="Toàn màn hình">⛶</button>
         </div>
-      </template>
-    </div>
-  </div>
 
-  <!-- BOTTOM NAV -->
-  <template x-if="$store.db.settings.glass.bottomNav">
-    <nav class="bottom-nav">
-      <div class="bn-pill" :style="'transform: translateX(' + bnIndex()*100 + '%)'"></div>
-      <template x-for="(it, i) in bnItems()" :key="it.id">
-        <button class="bn-item" :class="{active: view===it.id}" @click="view=it.id">
-          <span class="bn-icon" x-text="it.icon"></span><span class="bn-label" x-text="it.label"></span>
-        </button>
-      </template>
-    </nav>
-  </template>
+        <a href="https://www.ctu.edu.vn" target="_blank" class="ctu-web">www.ctu.edu.vn</a>
+    </footer>
 
-</div>
+    <!-- ================= JAVASCRIPT ================= -->
+    <script>
+        /* ==========================================================================
+           👉 DÁN LINK GOOGLE SLIDE VÀO ĐÂY (GIỮ NGUYÊN DẤU NGOẶC KÉP):
+           ========================================================================== */
+        const GOOGLE_SLIDE_URL = "https://docs.google.com/presentation/d/1sQBiKjvgbru8Rbg04yyHT2dhKskIWVLW/edit?usp=sharing&ouid=101522333351445863628&rtpof=true&sd=true";
+
+        let currentSlide = 1;
+        const totalSlides = 7;
+
+        function refreshSlideView() {
+            document.querySelectorAll('.slide-stage').forEach((stage, idx) => {
+                stage.classList.toggle('active', idx + 1 === currentSlide);
+            });
+
+            const progressRatio = ((currentSlide - 1) / (totalSlides - 1)) * 100;
+            document.getElementById('ctu-progress-rail-fill').style.width = `${progressRatio}%`;
+            playBeep(440, 0.04);
+
+            // Tự động bắn pháo hoa khi đến Slide cuối cùng
+            if (currentSlide === 7) {
+                setTimeout(triggerConfetti, 250);
+            }
+        }
+
+        function jumpToSlide(num) {
+            if (num >= 1 && num <= totalSlides) {
+                currentSlide = num;
+                refreshSlideView();
+            }
+        }
+
+        /* === 2. ĐIỀU HƯỚNG BẰNG NÚT > VÀ < === */
+        function handleSmartNext() {
+            if (currentSlide === 3) {
+                const isRevealed = document.getElementById(`cw-box-${selectedCwRowIdx}-0`).classList.contains('revealed');
+                if (!isRevealed) {
+                    revealCurrentRow();
+                } else if (selectedCwRowIdx < crosswordRows.length - 1) {
+                    chooseCwRow(selectedCwRowIdx + 1);
+                } else {
+                    jumpToSlide(4);
+                }
+            } else if (currentSlide === 5) {
+                if (curQIdx < quizList.length - 1) {
+                    nextQuizQ();
+                } else {
+                    jumpToSlide(6);
+                }
+            } else {
+                if (currentSlide < totalSlides) {
+                    currentSlide++;
+                    refreshSlideView();
+                }
+            }
+        }
+
+        function handleSmartPrev() {
+            if (currentSlide === 3 && selectedCwRowIdx > 0) {
+                chooseCwRow(selectedCwRowIdx - 1);
+            } else if (currentSlide === 5 && curQIdx > 0) {
+                prevQuizQ();
+            } else {
+                if (currentSlide > 1) {
+                    currentSlide--;
+                    refreshSlideView();
+                }
+            }
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') handleSmartNext();
+            if (e.key === 'ArrowLeft') handleSmartPrev();
+        });
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                document.exitFullscreen().catch(() => {});
+            }
+        }
+
+        /* NÚT TOÀN MÀN HÌNH SLIDE (CHỈ ICON) */
+        function toggleSlideFullscreen() {
+            const frameTarget = document.getElementById('slide-fullscreen-target');
+            const fsBtn = document.getElementById('btn-fs-toggle');
+
+            if (!document.fullscreenElement) {
+                if (frameTarget.requestFullscreen) {
+                    frameTarget.requestFullscreen().then(() => {
+                        fsBtn.innerText = "🗗";
+                    }).catch(() => {});
+                }
+            } else {
+                document.exitFullscreen().then(() => {
+                    fsBtn.innerText = "⛶";
+                }).catch(() => {});
+            }
+        }
+
+        document.addEventListener('fullscreenchange', () => {
+            const fsBtn = document.getElementById('btn-fs-toggle');
+            if (!document.fullscreenElement && fsBtn) {
+                fsBtn.innerText = "⛶";
+            }
+        });
+
+        /* === 3. Ô CHỮ TIẾNG VIỆT CÓ DẤU CHUẨN XÁC === */
+        const crosswordRows = [
+            { letters: ["N","E","W","T","O","N"], keyIdx: 0, clue: "1. Nhà bác học vĩ đại người Anh tìm ra 3 định luật chuyển động và vạn vật hấp dẫn?" },
+            { letters: ["H","A","W","K","I","N","G"], keyIdx: 0, clue: "2. Nhà vật lý lý thuyết kiệt xuất viết 'Lược sử thời gian', cống hiến trọn đời trên xe lăn?" },
+            { letters: ["T","Â","M","L","Ý"], keyIdx: 1, clue: "3. Tên học phần nghiên cứu về các hiện tượng tâm lý, nhân cách và hành vi con người?" },
+            { letters: ["N","Ă","N","G","L","Ự","C"], keyIdx: 0, clue: "4. Tổ hợp thuộc tính tâm lý độc đáo giúp con người hoàn thành xuất sắc hoạt động?" },
+            { letters: ["L","I","Ê","M","C","H","Í","N","H"], keyIdx: 4, clue: "5. Phẩm chất của Newton khi làm Giám sát Xưởng đúc tiền: kiên quyết chống nạn tiền giả?" },
+            { letters: ["S","Á","N","G","T","Ạ","O"], keyIdx: 1, clue: "6. Năng lực giúp Newton phát minh kính thiên văn phản xạ và Hawking tìm ra bức xạ hố đen?" },
+            { letters: ["Ý","C","H","Í"], keyIdx: 1, clue: "7. Phẩm chất tâm lý giúp cả hai thiên tài kiên cường vượt qua nghịch cảnh và bệnh tật?" },
+            { letters: ["T","H","I","Ê","N","T","À","I"], keyIdx: 1, clue: "8. Danh xưng dành cho những người có trí tuệ xuất chúng và cống hiến làm thay đổi nhân loại?" }
+        ];
+
+        let selectedCwRowIdx = 0;
+
+        function buildCrossword() {
+            const grid = document.getElementById('cw-grid-body');
+            grid.innerHTML = '';
+
+            crosswordRows.forEach((rowObj, rIdx) => {
+                const rowEl = document.createElement('div');
+                rowEl.className = `cw-row ${rIdx === 0 ? 'active-row' : ''}`;
+                rowEl.onclick = () => chooseCwRow(rIdx);
+
+                const numEl = document.createElement('div');
+                numEl.className = 'cw-row-label';
+                numEl.innerText = `${rIdx + 1}.`;
+                rowEl.appendChild(numEl);
+
+                const maxPreKey = 4;
+                const offset = maxPreKey - rowObj.keyIdx;
+                for (let i = 0; i < offset; i++) {
+                    const spacer = document.createElement('div');
+                    spacer.style.width = '36px';
+                    spacer.style.height = '36px';
+                    rowEl.appendChild(spacer);
+                }
+
+                rowObj.letters.forEach((char, cIdx) => {
+                    const box = document.createElement('div');
+                    box.className = `cw-box ${cIdx === rowObj.keyIdx ? 'key-cell' : ''}`;
+                    box.id = `cw-box-${rIdx}-${cIdx}`;
+                    box.dataset.char = char;
+                    rowEl.appendChild(box);
+                });
+
+                grid.appendChild(rowEl);
+            });
+
+            chooseCwRow(0);
+        }
+
+        function chooseCwRow(idx) {
+            selectedCwRowIdx = idx;
+            document.querySelectorAll('.cw-row').forEach((r, i) => {
+                r.classList.toggle('active-row', i === idx);
+            });
+            document.getElementById('cw-clue-text').innerText = crosswordRows[idx].clue;
+            playBeep(520, 0.03);
+        }
+
+        function revealCurrentRow() {
+            const rowObj = crosswordRows[selectedCwRowIdx];
+            rowObj.letters.forEach((char, cIdx) => {
+                const box = document.getElementById(`cw-box-${selectedCwRowIdx}-${cIdx}`);
+                box.innerText = char;
+                box.classList.add('revealed');
+            });
+            playChime();
+        }
+
+        function revealAllRows() {
+            crosswordRows.forEach((rowObj, rIdx) => {
+                rowObj.letters.forEach((char, cIdx) => {
+                    const box = document.getElementById(`cw-box-${rIdx}-${cIdx}`);
+                    box.innerText = char;
+                    box.classList.add('revealed');
+                });
+            });
+            playChime();
+        }
+
+        /* === 4. QUIZ CÂY TÁO & SỰ CỐ NEWTON GỤC NGÃ === */
+        const quizList = [
+            {
+                q: "1. (Newton) Theo tâm lý học nhân cách, cơ chế nào thúc đẩy cậu bé Newton vượt qua tổn thương mồ côi cha và bị bắt nạt?",
+                options: ["A. Cơ chế phóng chiếu", "B. Cơ chế bù trừ tâm lý (lấy trí tuệ khẳng định tự tôn)", "C. Cơ chế chối bỏ thực tại", "D. Cơ chế thoái lui"],
+                correct: 1
+            },
+            {
+                q: "2. (Hawking) Khi bị chẩn đoán mắc ALS năm 21 tuổi (tiên lượng sống 2 năm), điều gì đã giúp Hawking vượt qua khủng hoảng?",
+                options: ["A. Mong muốn kiếm tiền", "B. Tình yêu, sự đồng hành của gia đình và tìm thấy ý nghĩa trong nghiên cứu", "C. Áp lực thi cử", "D. Thái độ bất cần"],
+                correct: 1
+            },
+            {
+                q: "3. (Newton) Khi quản lý Xưởng đúc tiền Hoàng gia Anh, Newton thể hiện phẩm chất đạo đức nổi trội nào?",
+                options: ["A. Thỏa hiệp với tội phạm", "B. Liêm chính thép, kiên quyết chống tiền giả dù bị đe dọa", "C. Thờ ơ, bỏ bê công việc", "D. Lợi dụng chức vụ trục lợi"],
+                correct: 1
+            },
+            {
+                q: "4. (Hawking) Tinh thần cống hiến và giá trị nhân văn của Stephen Hawking thể hiện rõ nhất qua hành động nào?",
+                options: ["A. Giữ kín các phát minh", "B. Xuất bản cuốn 'Lược sử thời gian' đại chúng hóa tri thức vũ trụ", "C. Chỉ dạy người giàu", "D. Từ chối viết sách"],
+                correct: 1
+            },
+            {
+                q: "5. (Newton) Thí nghiệm dùng lăng kính tách ánh sáng trắng thành nhiều dải màu thể hiện năng lực nào?",
+                options: ["A. Năng lực quan sát tinh tế và thực nghiệm khoa học chính xác", "B. Đoán mò cảm tính", "C. Sao chép từ Aristotle", "D. Ảo thuật giác quan"],
+                correct: 0
+            },
+            {
+                q: "6. (Hawking) Thành tựu đột phá nhất kết nối cơ học lượng tử với nhiệt động lực học của Hawking là:",
+                options: ["A. Ba định luật chuyển động", "B. Khám phá lý thuyết về Bức xạ Hawking từ lỗ đen", "C. Định luật vạn vật hấp dẫn", "D. Chế tạo kính thiên văn"],
+                correct: 1
+            },
+            {
+                q: "7. (Newton) Khoảng thời gian đại dịch dịch hạch (1665–1667) buộc Cambridge đóng cửa đã làm nổi bật năng lực nào của Newton?",
+                options: ["A. Năng lực tự học, nghiên cứu độc lập và biến cô độc thành đỉnh cao sáng tạo", "B. Trốn tránh dịch bệnh", "C. Phụ thuộc hoàn toàn vào trường", "D. Ngừng suy nghĩ"],
+                correct: 0
+            },
+            {
+                q: "8. (Hawking) Khi bị liệt hoàn toàn và mất giọng nói, Hawking đã thích nghi như thế nào để tiếp tục làm việc?",
+                options: ["A. Từ bỏ nghiên cứu", "B. Sử dụng máy tính và cảm biến cơ má tổng hợp giọng nói để viết sách", "C. Nhờ người khác giải toán", "D. Rút lui về quê"],
+                correct: 1
+            },
+            {
+                q: "9. (So sánh) Theo Maslow, động cơ tâm lý thúc đẩy cả Newton và Hawking miệt mài nghiên cứu suốt đời thuộc tầng nào?",
+                options: ["A. Nhu cầu vật chất", "B. Nhu cầu an toàn", "C. Nhu cầu Tự hiện thực hóa tiềm năng (Self-Actualization)", "D. Nhu cầu quyền lực"],
+                correct: 2
+            },
+            {
+                q: "10. (So sánh) Điểm khác biệt lớn nhất về phong cách truyền bá tri thức giữa Newton và Hawking là:",
+                options: ["A. Newton viết sách đại chúng, Hawking khép kín", "B. Newton nghiên cứu hàn lâm kinh điển (Principia), khép kín; còn Hawking tích cực truyền cảm hứng đại chúng", "C. Cả hai đều không viết sách", "D. Không có khác biệt"],
+                correct: 1
+            }
+        ];
+
+        let curQIdx = 0;
+        let userQuizAnswers = new Array(quizList.length).fill(null);
+
+        function setupQuiz() {
+            const chipsBox = document.getElementById('q-chips-container');
+            chipsBox.innerHTML = '';
+            quizList.forEach((_, idx) => {
+                const chip = document.createElement('div');
+                chip.className = `chip-btn ${idx === 0 ? 'active' : ''}`;
+                chip.id = `q-chip-${idx}`;
+                chip.innerText = idx + 1;
+                chip.onclick = () => { curQIdx = idx; displayQuizQuestion(); };
+                chipsBox.appendChild(chip);
+            });
+
+            displayQuizQuestion();
+        }
+
+        function displayQuizQuestion() {
+            const qData = quizList[curQIdx];
+            document.getElementById('quiz-question-title').innerText = qData.q;
+
+            document.querySelectorAll('.chip-btn').forEach((c, idx) => {
+                c.classList.toggle('active', idx === curQIdx);
+            });
+
+            const apple = document.getElementById('svg-apple');
+            const durian = document.getElementById('svg-durian');
+            const newton = document.getElementById('newton-figure');
+            const formula = document.getElementById('formula-text');
+            const pill = document.getElementById('quiz-status-pill');
+
+            apple.classList.remove('drop');
+            durian.classList.remove('drop');
+            newton.classList.remove('knocked-out');
+            formula.classList.remove('show');
+            pill.style.display = 'none';
+
+            // Nếu câu đã trả lời, khôi phục lại trạng thái quả rơi & Newton
+            if (userQuizAnswers[curQIdx] !== null) {
+                const chosen = userQuizAnswers[curQIdx];
+                if (chosen === qData.correct) {
+                    apple.classList.add('drop');
+                    formula.classList.add('show');
+                    pill.innerText = "CORRECT [PASS ✓]";
+                    pill.className = "quiz-status-pill pass";
+                } else {
+                    durian.classList.add('drop');
+                    newton.classList.add('knocked-out');
+                    pill.innerText = "INCORRECT [FAILED ✗]";
+                    pill.className = "quiz-status-pill fail";
+                }
+            }
+
+            const choiceBox = document.getElementById('quiz-choices-container');
+            choiceBox.innerHTML = '';
+            qData.options.forEach((optText, oIdx) => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-choice';
+                btn.innerText = optText;
+                btn.onclick = () => selectQuizAnswer(oIdx);
+
+                if (userQuizAnswers[curQIdx] !== null) {
+                    if (oIdx === qData.correct) btn.classList.add('correct');
+                    if (userQuizAnswers[curQIdx] === oIdx && oIdx !== qData.correct) btn.classList.add('wrong');
+                }
+                choiceBox.appendChild(btn);
+            });
+
+            updateQuizScore();
+        }
+
+        function selectQuizAnswer(selectedIdx) {
+            userQuizAnswers[curQIdx] = selectedIdx;
+            const qData = quizList[curQIdx];
+            const chip = document.getElementById(`q-chip-${curQIdx}`);
+            const apple = document.getElementById('svg-apple');
+            const durian = document.getElementById('svg-durian');
+            const newton = document.getElementById('newton-figure');
+            const formula = document.getElementById('formula-text');
+            const pill = document.getElementById('quiz-status-pill');
+
+            const allBtns = document.querySelectorAll('.answer-choice');
+            allBtns.forEach((btn, idx) => {
+                if (idx === qData.correct) btn.classList.add('correct');
+                if (idx === selectedIdx && selectedIdx !== qData.correct) btn.classList.add('wrong');
+            });
+
+            apple.classList.remove('drop');
+            durian.classList.remove('drop');
+            newton.classList.remove('knocked-out');
+
+            if (selectedIdx === qData.correct) {
+                // ĐÚNG: TÁO RƠI - NEWTON BÌNH AN
+                setTimeout(() => apple.classList.add('drop'), 10);
+                formula.classList.add('show');
+                pill.innerText = "CORRECT [PASS ✓]";
+                pill.className = "quiz-status-pill pass";
+                chip.className = "chip-btn pass active";
+                playChime();
+            } else {
+                // SAI: SẦU RIÊNG RƠI TRÚNG ĐẦU - NEWTON GỤC NGÃ (X_X)
+                setTimeout(() => {
+                    durian.classList.add('drop');
+                    setTimeout(() => newton.classList.add('knocked-out'), 300);
+                }, 10);
+                pill.innerText = "INCORRECT [FAILED ✗]";
+                pill.className = "quiz-status-pill fail";
+                chip.className = "chip-btn fail active";
+                playBonk();
+            }
+
+            updateQuizScore();
+        }
+
+        function nextQuizQ() {
+            if (curQIdx < quizList.length - 1) {
+                curQIdx++;
+                displayQuizQuestion();
+            }
+        }
+
+        function prevQuizQ() {
+            if (curQIdx > 0) {
+                curQIdx--;
+                displayQuizQuestion();
+            }
+        }
+
+        function updateQuizScore() {
+            let correctCount = 0;
+            userQuizAnswers.forEach((ans, idx) => {
+                if (ans === quizList[idx].correct) correctCount++;
+            });
+            document.getElementById('quiz-score-indicator').innerText = `Điểm: ${correctCount * 10} / 100`;
+        }
+
+        /* === 5. TRÒ CHƠI KÉO THẢ NHÂN CÁCH === */
+        const shortTraits = [
+            { id: 1, text: "Tổn thương tuổi thơ, đa nghi", target: "newton" },
+            { id: 2, text: "Sử dụng thiết bị hỗ trợ giao tiếp", target: "hawking" },
+            { id: 3, text: "Tư duy toán học vượt trội", target: "newton" },
+            { id: 4, text: "Khả năng thích nghi hoàn cảnh", target: "hawking" },
+            { id: 5, text: "Liêm chính, chống tiền giả", target: "newton" },
+            { id: 6, text: "Ý chí kiên cường trước ALS", target: "hawking" },
+            { id: 7, text: "Quan sát và thực nghiệm quang học", target: "newton" },
+            { id: 8, text: "Khám phá bức xạ hố đen", target: "hawking" }
+        ];
+
+        function setupDragDrop() {
+            const dock = document.getElementById('card-dock');
+            dock.innerHTML = '';
+            const shuffled = [...shortTraits].sort(() => Math.random() - 0.5);
+
+            shuffled.forEach(item => {
+                const slip = document.createElement('div');
+                slip.className = 'draggable-slip';
+                slip.id = `slip-${item.id}`;
+                slip.draggable = true;
+                slip.innerText = item.text;
+                slip.ondragstart = (e) => e.dataTransfer.setData("text/plain", item.id);
+                slip.onclick = () => {
+                    const choice = prompt(`Gán "${item.text}" cho ai?\n1: Newton\n2: Hawking`);
+                    if (choice === "1") evaluateAssignment(item.id, "newton");
+                    if (choice === "2") evaluateAssignment(item.id, "hawking");
+                };
+                dock.appendChild(slip);
+            });
+        }
+
+        function allowDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+
+        function handleDrop(e, target) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            const cardId = parseInt(e.dataTransfer.getData("text/plain"));
+            evaluateAssignment(cardId, target);
+        }
+
+        function evaluateAssignment(cardId, target) {
+            const item = shortTraits.find(t => t.id === cardId);
+            const slipEl = document.getElementById(`slip-${cardId}`);
+            if (!slipEl) return;
+
+            if (item.target === target) {
+                playChime();
+                slipEl.draggable = false;
+                slipEl.onclick = null;
+                slipEl.className = 'draggable-slip matched';
+                slipEl.innerText = `${item.text} ✓`;
+                document.getElementById(`zone-${target}`).appendChild(slipEl);
+            } else {
+                playBonk();
+                slipEl.style.borderColor = '#ef4444';
+                slipEl.style.background = '#fee2e2';
+                setTimeout(() => {
+                    slipEl.style.borderColor = 'var(--border-vintage)';
+                    slipEl.style.background = '#ffffff';
+                }, 500);
+            }
+        }
+
+        /* === 6. ÂM THANH BẰNG WEB AUDIO API === */
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playBeep(freq, duration) {
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.frequency.value = freq;
+                gain.gain.value = 0.04;
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e){}
+        }
+
+        function playChime() {
+            try {
+                [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
+                    setTimeout(() => playBeep(f, 0.1), i * 70);
+                });
+            } catch(e){}
+        }
+
+        function playBonk() {
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.value = 130;
+                gain.gain.value = 0.08;
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.25);
+            } catch(e){}
+        }
+
+        /* === 7. PHÁO HOA CANVAS (CHỈ BẮN Ở SLIDE 7) === */
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function triggerConfetti() {
+            particles = [];
+            const colors = ['#005baa', '#00a0e9', '#f59e0b', '#7a1f18', '#2e7d32'];
+            for (let i = 0; i < 120; i++) {
+                particles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2,
+                    vx: (Math.random() - 0.5) * 16,
+                    vy: (Math.random() - 0.7) * 18,
+                    size: Math.random() * 8 + 4,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    alpha: 1
+                });
+            }
+            animateConfetti();
+        }
+
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, idx) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.35;
+                p.alpha -= 0.015;
+
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = Math.max(0, p.alpha);
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+
+                if (p.alpha <= 0) particles.splice(idx, 1);
+            });
+
+            if (particles.length > 0) requestAnimationFrame(animateConfetti);
+            else ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        /* KHỞI ĐỘNG */
+        window.onload = () => {
+            document.getElementById('main-google-slide-frame').src = GOOGLE_SLIDE_URL;
+            buildCrossword();
+            setupQuiz();
+            setupDragDrop();
+            refreshSlideView();
+        };
+    </script>
 </body>
 </html>
