@@ -292,7 +292,7 @@
 
         .btn-vintage:hover { opacity: 0.92; transform: translateY(-1px); }
 
-        /* ================= 4. SLIDE GOOGLE SLIDES (GẮN CỐ ĐỊNH TRỰC TIẾP) ================= */
+        /* ================= 4. SLIDE GOOGLE SLIDES (ĐÃ GẮN CỐ ĐỊNH LINK THẬT) ================= */
         .slide-frame-container {
             width: 100%;
             max-width: 1100px;
@@ -865,15 +865,13 @@
             </div>
         </section>
 
-        <!-- ================= SLIDE 4: TRÌNH CHIẾU GOOGLE SLIDES TRỰC TIẾP ================= -->
+        <!-- ================= SLIDE 4: TRÌNH CHIẾU GOOGLE SLIDES (ĐÃ GẮN CỐ ĐỊNH LINK THẬT) ================= -->
         <section id="slide-4" class="slide-stage">
             <div class="slide-frame-container" id="slide-fullscreen-target">
                 <div class="slide-viewport-box">
-                    <!-- =========================================================================
-                         👉 DÁN LINK GOOGLE SLIDE VÀO TRONG DẤU NGOẶC KÉP CỦA src="..." DƯỚI ĐÂY:
-                         ========================================================================= -->
+                    <!-- LINK GOOGLE SLIDE CHUẨN XÁC CỦA NHÓM 7 ĐÃ ĐƯỢC GẮN TẠI ĐÂY -->
                     <iframe id="main-google-slide-frame" 
-                            src="https://docs.google.com/presentation/d/e/2PACX-1vRzXfsc4iozY21TTLtFLDALcTFU0EveptQks6_scN20fgvaW_gbGM5yUtvJFA62RQ/pub?start=false&loop=false&delayms=3000" 
+                            src="https://docs.google.com/presentation/d/1sQBiKjvgbru8Rbg04yyHT2dhKskIWVLW/embed?start=false&loop=false&delayms=3000" 
                             allowfullscreen="true">
                     </iframe>
                 </div>
@@ -1124,7 +1122,7 @@
             }
         }
 
-        /* PHÍM TẮT F CHO TOÀN MÀN HÌNH TOÀN BÀI */
+        /* PHÍM TẮT F BẬT TẮT TOÀN MÀN HÌNH TOÀN BÀI */
         window.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight') handleSmartNext();
             if (e.key === 'ArrowLeft') handleSmartPrev();
