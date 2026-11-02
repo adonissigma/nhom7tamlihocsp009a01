@@ -292,45 +292,19 @@
 
         .btn-vintage:hover { opacity: 0.92; transform: translateY(-1px); }
 
-        /* ================= 4. SLIDE GOOGLE SLIDES ================= */
+        /* ================= 4. SLIDE GOOGLE SLIDES (GẮN CỐ ĐỊNH TRỰC TIẾP) ================= */
         .slide-frame-container {
             width: 100%;
             max-width: 1100px;
             height: 94%;
             display: flex;
             flex-direction: column;
-            gap: 6px;
             position: relative;
         }
 
-        .slide-action-bar {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-        }
-
-        /* Nút toàn màn hình CHỈ CÓ ICON */
-        .btn-fullscreen-icon {
-            background: var(--ctu-blue);
-            color: #fff;
-            border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 6px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0, 91, 170, 0.25);
-            transition: all 0.2s;
-        }
-
-        .btn-fullscreen-icon:hover { background: #004582; transform: scale(1.05); }
-
         .slide-viewport-box {
             flex: 1;
-            background: #000;
+            background: #111;
             border-radius: 12px;
             border: 3px solid var(--border-vintage);
             box-shadow: 0 15px 40px rgba(0,0,0,0.25);
@@ -370,46 +344,65 @@
             justify-content: center;
         }
 
-        /* HOẠT ẢNH QUẢ RƠI & NEWTON GỤC NGÃ TRONG SVG */
-        #svg-apple {
+        .fruit-drop-layer {
+            position: absolute;
+            font-size: 3.8rem;
+            top: 20px;
+            left: 54%;
             opacity: 0;
-            transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.15s;
+            pointer-events: none;
+            z-index: 50;
         }
-        #svg-apple.drop {
+
+        .fruit-drop-layer.drop-apple {
             opacity: 1;
-            transform: translateY(185px);
+            animation: animAppleDrop 0.65s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
 
-        #svg-durian {
-            opacity: 0;
-            transition: transform 0.6s cubic-bezier(0.5, 0, 0.75, 0), opacity 0.15s;
-        }
-        #svg-durian.drop {
+        .fruit-drop-layer.drop-durian {
             opacity: 1;
-            transform: translateY(155px);
+            animation: animDurianCrash 0.6s cubic-bezier(0.5, 0, 0.75, 0) forwards;
         }
 
-        /* Trạng thái Newton bị gục ngã (Die/KO) */
-        #newton-figure {
-            transform-origin: 170px 320px;
-            transition: transform 0.4s ease-in;
-        }
-        #newton-figure.knocked-out {
-            transform: rotate(45deg);
+        @keyframes animAppleDrop {
+            0% { transform: translateY(0); opacity: 1; }
+            70% { transform: translateY(220px) rotate(15deg); opacity: 1; }
+            85% { transform: translateY(195px) rotate(-10deg); }
+            100% { transform: translateY(220px) rotate(0deg); opacity: 1; }
         }
 
-        .dizzy-indicator {
-            display: none;
-            font-size: 1.6rem;
+        @keyframes animDurianCrash {
+            0% { transform: translateY(0) scale(0.9); opacity: 1; }
+            70% { transform: translateY(190px) scale(1.1); opacity: 1; }
+            85% { transform: translateY(180px) scale(0.95); }
+            100% { transform: translateY(190px) scale(1); opacity: 1; }
         }
-        #newton-figure.knocked-out .dizzy-indicator {
-            display: block;
+
+        #newton-character {
+            transform-origin: 150px 320px;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #newton-character.knocked-out {
+            transform: rotate(50deg) translate(25px, -15px);
         }
 
         .eye-normal { display: block; }
         .eye-dead { display: none; }
-        #newton-figure.knocked-out .eye-normal { display: none; }
-        #newton-figure.knocked-out .eye-dead { display: block; }
+        #newton-character.knocked-out .eye-normal { display: none; }
+        #newton-character.knocked-out .eye-dead { display: block; }
+
+        .dizzy-stars {
+            display: none;
+            font-size: 1.8rem;
+            animation: spinStars 1s infinite linear;
+        }
+        #newton-character.knocked-out .dizzy-stars { display: block; }
+
+        @keyframes spinStars {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
         .quiz-status-pill {
             position: absolute;
@@ -812,7 +805,7 @@
 
     <main id="presentation-viewport">
 
-        <!-- ================= SLIDE 1: BÌA TÂM LÍ HỌC ================= -->
+        <!-- ================= SLIDE 1: BÌA ================= -->
         <section id="slide-1" class="slide-stage active">
             <div class="cover-container">
                 <div class="stamp-banner">TÂM LÍ HỌC</div>
@@ -828,7 +821,7 @@
             </div>
         </section>
 
-        <!-- ================= SLIDE 2: THÀNH VIÊN NHÓM 7 ================= -->
+        <!-- ================= SLIDE 2: NHÓM 7 ================= -->
         <section id="slide-2" class="slide-stage">
             <div class="roster-card">
                 <h2 class="roster-title">NHÓM 7</h2>
@@ -875,13 +868,14 @@
         <!-- ================= SLIDE 4: TRÌNH CHIẾU GOOGLE SLIDES TRỰC TIẾP ================= -->
         <section id="slide-4" class="slide-stage">
             <div class="slide-frame-container" id="slide-fullscreen-target">
-                <div class="slide-action-bar">
-                    <button class="btn-fullscreen-icon" id="btn-fs-toggle" onclick="toggleSlideFullscreen()" title="Toàn màn hình">
-                        ⛶
-                    </button>
-                </div>
                 <div class="slide-viewport-box">
-                    <iframe id="main-google-slide-frame" allowfullscreen="true"></iframe>
+                    <!-- =========================================================================
+                         👉 DÁN LINK GOOGLE SLIDE VÀO TRONG DẤU NGOẶC KÉP CỦA src="..." DƯỚI ĐÂY:
+                         ========================================================================= -->
+                    <iframe id="main-google-slide-frame" 
+                            src="https://docs.google.com/presentation/d/e/2PACX-1vRzXfsc4iozY21TTLtFLDALcTFU0EveptQks6_scN20fgvaW_gbGM5yUtvJFA62RQ/pub?start=true&loop=true&delayms=3000" 
+                            allowfullscreen="true">
+                    </iframe>
                 </div>
             </div>
         </section>
@@ -895,15 +889,16 @@
             <div class="quiz-woodcut-layout">
                 <div class="tree-scene-container" id="tree-scene-box">
                     <div class="quiz-status-pill" id="quiz-status-pill">PASS [✓]</div>
+                    
+                    <div class="fruit-drop-layer" id="fruit-apple-layer">🍎</div>
+                    <div class="fruit-drop-layer" id="fruit-durian-layer">🍈</div>
                     <div class="formula-float" id="formula-text">F = G (m₁m₂ / r²)</div>
 
-                    <!-- TRANH MINH HỌA TÍCH HỢP QUẢ RƠI & NEWTON GỤC NGÃ -->
                     <svg viewBox="0 0 320 380" style="width: 100%; height: 100%;">
                         <rect x="0" y="0" width="320" height="380" fill="#eaf2f8"/>
                         <path d="M-20,380 Q100,280 340,320 L340,380 Z" fill="#7cb342"/>
                         <path d="M-20,380 Q160,260 340,380 Z" fill="#558b2f"/>
                         
-                        <!-- Cây táo -->
                         <path d="M70,380 Q95,200 80,120 Q120,140 140,380 Z" fill="#5d4037"/>
                         <path d="M80,160 Q30,120 10,130 Q30,110 75,140 Z" fill="#4e342e"/>
                         <path d="M90,140 Q150,90 200,110 Q140,110 85,135 Z" fill="#4e342e"/>
@@ -915,33 +910,12 @@
                         
                         <circle cx="50" cy="85" r="7" fill="#d32f2f"/>
                         <circle cx="110" cy="55" r="7" fill="#d32f2f"/>
+                        <circle cx="160" cy="65" r="7" fill="#d32f2f"/>
                         <circle cx="210" cy="90" r="7" fill="#d32f2f"/>
                         <circle cx="145" cy="105" r="7" fill="#d32f2f"/>
 
-                        <!-- QUẢ TÁO ĐỎ RƠI TRONG HỆ TỌA ĐỘ CHUẨN -->
-                        <g id="svg-apple">
-                            <circle cx="170" cy="55" r="14" fill="#d32f2f"/>
-                            <path d="M170,41 Q175,32 180,35" stroke="#5d4037" stroke-width="2.5" fill="none"/>
-                            <path d="M172,37 Q185,32 182,42 Z" fill="#4caf50"/>
-                        </g>
-
-                        <!-- QUẢ SẦU RIÊNG GAI RƠI TRONG HỆ TỌA ĐỘ CHUẨN -->
-                        <g id="svg-durian">
-                            <!-- Gai sầu riêng -->
-                            <polygon points="145,30 152,45 138,45" fill="#7cb342"/>
-                            <polygon points="130,45 145,55 130,65" fill="#689f38"/>
-                            <polygon points="160,45 145,55 160,65" fill="#689f38"/>
-                            <polygon points="145,80 138,65 152,65" fill="#7cb342"/>
-                            <!-- Thân quả sầu riêng -->
-                            <ellipse cx="145" cy="55" rx="16" ry="19" fill="#8bc34a" stroke="#558b2f" stroke-width="2"/>
-                            <!-- Cuống quả -->
-                            <path d="M145,36 L145,26" stroke="#4e342e" stroke-width="3.5"/>
-                        </g>
-
-                        <!-- NHÂN VẬT NEWTON (CÓ KHẢ NĂNG GỤC NGÃ KHI SAI) -->
-                        <g id="newton-figure" transform="translate(110, 180)">
-                            <!-- Sao choáng váng khi bị đập trúng -->
-                            <text x="30" y="8" class="dizzy-indicator">💫 💫</text>
+                        <g id="newton-character" transform="translate(110, 180)">
+                            <text x="15" y="-10" class="dizzy-stars">💫 💫</text>
 
                             <path d="M20,120 L80,135 L95,120 L60,105 L20,110 Z" fill="#263238"/>
                             <path d="M25,125 L75,145 L85,155 L15,145 Z" fill="#37474f"/>
@@ -953,23 +927,19 @@
                             <path d="M20,65 Q45,85 60,80 L55,100 Q35,95 15,85 Z" fill="#0d47a1"/>
                             <polygon points="50,75 75,65 90,85 65,95" fill="#f5f5f5" stroke="#8d6e63" stroke-width="2"/>
                             
-                            <!-- Đầu và biểu cảm -->
                             <circle cx="35" cy="38" r="14" fill="#ffcc80"/>
                             
-                            <!-- Mắt bình thường (Khi sống) -->
                             <g class="eye-normal">
                                 <circle cx="42" cy="36" r="2" fill="#3e2723"/>
                                 <path d="M40,43 Q44,46 40,48" stroke="#d7ccc8" fill="none" stroke-width="1.5"/>
                             </g>
 
-                            <!-- Mắt X_X (Khi bị sầu riêng đập trúng) -->
                             <g class="eye-dead">
-                                <line x1="39" y1="33" x2="45" y2="39" stroke="#b71c1c" stroke-width="2"/>
-                                <line x1="45" y1="33" x2="39" y2="39" stroke="#b71c1c" stroke-width="2"/>
-                                <path d="M37,46 Q42,42 47,46" stroke="#b71c1c" fill="none" stroke-width="2"/>
+                                <line x1="38" y1="32" x2="46" y2="40" stroke="#b71c1c" stroke-width="2.2"/>
+                                <line x1="46" y1="32" x2="38" y2="40" stroke="#b71c1c" stroke-width="2.2"/>
+                                <path d="M37,46 Q42,42 47,46" stroke="#b71c1c" fill="none" stroke-width="2.2"/>
                             </g>
 
-                            <!-- Mái tóc giả thời Phục hưng -->
                             <path d="M22,25 Q35,15 50,25 Q55,40 50,55 Q40,60 30,58 Q18,50 22,25 Z" fill="#cfd8dc"/>
                             <circle cx="22" cy="40" r="6" fill="#b0bec5"/>
                             <circle cx="24" cy="50" r="6" fill="#b0bec5"/>
@@ -1084,7 +1054,7 @@
             <button class="pill-btn" onclick="handleSmartPrev()" title="Lùi lại">‹</button>
             <button class="pill-btn" onclick="handleSmartNext()" title="Tiến tới">›</button>
             <div class="pill-divider"></div>
-            <button class="pill-btn" onclick="toggleFullScreen()" title="Toàn màn hình">⛶</button>
+            <button class="pill-btn" onclick="toggleFullScreen()" title="Toàn màn hình (F)">⛶</button>
         </div>
 
         <a href="https://www.ctu.edu.vn" target="_blank" class="ctu-web">www.ctu.edu.vn</a>
@@ -1092,11 +1062,6 @@
 
     <!-- ================= JAVASCRIPT ================= -->
     <script>
-        /* ==========================================================================
-           👉 DÁN LINK GOOGLE SLIDE VÀO ĐÂY (GIỮ NGUYÊN DẤU NGOẶC KÉP):
-           ========================================================================== */
-        const GOOGLE_SLIDE_URL = "https://docs.google.com/presentation/d/1sQBiKjvgbru8Rbg04yyHT2dhKskIWVLW/edit?usp=sharing&ouid=101522333351445863628&rtpof=true&sd=true";
-
         let currentSlide = 1;
         const totalSlides = 7;
 
@@ -1109,7 +1074,6 @@
             document.getElementById('ctu-progress-rail-fill').style.width = `${progressRatio}%`;
             playBeep(440, 0.04);
 
-            // Tự động bắn pháo hoa khi đến Slide cuối cùng
             if (currentSlide === 7) {
                 setTimeout(triggerConfetti, 250);
             }
@@ -1160,9 +1124,11 @@
             }
         }
 
+        /* PHÍM TẮT F CHO TOÀN MÀN HÌNH TOÀN BÀI */
         window.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight') handleSmartNext();
             if (e.key === 'ArrowLeft') handleSmartPrev();
+            if (e.key === 'f' || e.key === 'F') toggleFullScreen();
         });
 
         function toggleFullScreen() {
@@ -1172,31 +1138,6 @@
                 document.exitFullscreen().catch(() => {});
             }
         }
-
-        /* NÚT TOÀN MÀN HÌNH SLIDE (CHỈ ICON) */
-        function toggleSlideFullscreen() {
-            const frameTarget = document.getElementById('slide-fullscreen-target');
-            const fsBtn = document.getElementById('btn-fs-toggle');
-
-            if (!document.fullscreenElement) {
-                if (frameTarget.requestFullscreen) {
-                    frameTarget.requestFullscreen().then(() => {
-                        fsBtn.innerText = "🗗";
-                    }).catch(() => {});
-                }
-            } else {
-                document.exitFullscreen().then(() => {
-                    fsBtn.innerText = "⛶";
-                }).catch(() => {});
-            }
-        }
-
-        document.addEventListener('fullscreenchange', () => {
-            const fsBtn = document.getElementById('btn-fs-toggle');
-            if (!document.fullscreenElement && fsBtn) {
-                fsBtn.innerText = "⛶";
-            }
-        });
 
         /* === 3. Ô CHỮ TIẾNG VIỆT CÓ DẤU CHUẨN XÁC === */
         const crosswordRows = [
@@ -1279,7 +1220,7 @@
             playChime();
         }
 
-        /* === 4. QUIZ CÂY TÁO & SỰ CỐ NEWTON GỤC NGÃ === */
+        /* === 4. QUIZ CÂY TÁO & HIỆU ỨNG NEWTON DIE === */
         const quizList = [
             {
                 q: "1. (Newton) Theo tâm lý học nhân cách, cơ chế nào thúc đẩy cậu bé Newton vượt qua tổn thương mồ côi cha và bị bắt nạt?",
@@ -1359,30 +1300,29 @@
                 c.classList.toggle('active', idx === curQIdx);
             });
 
-            const apple = document.getElementById('svg-apple');
-            const durian = document.getElementById('svg-durian');
-            const newton = document.getElementById('newton-figure');
+            const appleLayer = document.getElementById('fruit-apple-layer');
+            const durianLayer = document.getElementById('fruit-durian-layer');
+            const newton = document.getElementById('newton-character');
             const formula = document.getElementById('formula-text');
             const pill = document.getElementById('quiz-status-pill');
 
-            apple.classList.remove('drop');
-            durian.classList.remove('drop');
+            appleLayer.className = 'fruit-drop-layer';
+            durianLayer.className = 'fruit-drop-layer';
             newton.classList.remove('knocked-out');
             formula.classList.remove('show');
             pill.style.display = 'none';
 
-            // Nếu câu đã trả lời, khôi phục lại trạng thái quả rơi & Newton
             if (userQuizAnswers[curQIdx] !== null) {
                 const chosen = userQuizAnswers[curQIdx];
                 if (chosen === qData.correct) {
-                    apple.classList.add('drop');
+                    appleLayer.className = 'fruit-drop-layer drop-apple';
                     formula.classList.add('show');
                     pill.innerText = "CORRECT [PASS ✓]";
                     pill.className = "quiz-status-pill pass";
                 } else {
-                    durian.classList.add('drop');
+                    durianLayer.className = 'fruit-drop-layer drop-durian';
                     newton.classList.add('knocked-out');
-                    pill.innerText = "INCORRECT [FAILED ✗]";
+                    pill.innerText = "INCORRECT [FAILED / K.O ✗]";
                     pill.className = "quiz-status-pill fail";
                 }
             }
@@ -1409,9 +1349,9 @@
             userQuizAnswers[curQIdx] = selectedIdx;
             const qData = quizList[curQIdx];
             const chip = document.getElementById(`q-chip-${curQIdx}`);
-            const apple = document.getElementById('svg-apple');
-            const durian = document.getElementById('svg-durian');
-            const newton = document.getElementById('newton-figure');
+            const appleLayer = document.getElementById('fruit-apple-layer');
+            const durianLayer = document.getElementById('fruit-durian-layer');
+            const newton = document.getElementById('newton-character');
             const formula = document.getElementById('formula-text');
             const pill = document.getElementById('quiz-status-pill');
 
@@ -1421,25 +1361,23 @@
                 if (idx === selectedIdx && selectedIdx !== qData.correct) btn.classList.add('wrong');
             });
 
-            apple.classList.remove('drop');
-            durian.classList.remove('drop');
+            appleLayer.className = 'fruit-drop-layer';
+            durianLayer.className = 'fruit-drop-layer';
             newton.classList.remove('knocked-out');
 
             if (selectedIdx === qData.correct) {
-                // ĐÚNG: TÁO RƠI - NEWTON BÌNH AN
-                setTimeout(() => apple.classList.add('drop'), 10);
+                setTimeout(() => appleLayer.className = 'fruit-drop-layer drop-apple', 10);
                 formula.classList.add('show');
                 pill.innerText = "CORRECT [PASS ✓]";
                 pill.className = "quiz-status-pill pass";
                 chip.className = "chip-btn pass active";
                 playChime();
             } else {
-                // SAI: SẦU RIÊNG RƠI TRÚNG ĐẦU - NEWTON GỤC NGÃ (X_X)
                 setTimeout(() => {
-                    durian.classList.add('drop');
-                    setTimeout(() => newton.classList.add('knocked-out'), 300);
+                    durianLayer.className = 'fruit-drop-layer drop-durian';
+                    setTimeout(() => newton.classList.add('knocked-out'), 250);
                 }, 10);
-                pill.innerText = "INCORRECT [FAILED ✗]";
+                pill.innerText = "INCORRECT [FAILED / K.O ✗]";
                 pill.className = "quiz-status-pill fail";
                 chip.className = "chip-btn fail active";
                 playBonk();
@@ -1538,7 +1476,7 @@
             }
         }
 
-        /* === 6. ÂM THANH BẰNG WEB AUDIO API === */
+        /* === 6. ÂM THANH WEB AUDIO API === */
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playBeep(freq, duration) {
@@ -1626,7 +1564,6 @@
 
         /* KHỞI ĐỘNG */
         window.onload = () => {
-            document.getElementById('main-google-slide-frame').src = GOOGLE_SLIDE_URL;
             buildCrossword();
             setupQuiz();
             setupDragDrop();
